@@ -1,23 +1,22 @@
-
 {
   "format_version": 2,
   "header": {
-    "name": "ReyCode Energy Sniper BP",
-    "description": "Fantasy energy weapon for Bedrock",
-    "uuid": "e981aeb7-5dd4-4d2b-9e1a-1caa6d48a721",
+    "name": "Custom Weapons BP",
+    "description": "USP, Desert Eagle, AWP",
+    "uuid": "a47dda24-868e-464a-9ab5-4bde6587538a",
     "version": [1, 0, 0],
     "min_engine_version": [1, 21, 0]
   },
   "modules": [
     {
       "type": "data",
-      "uuid": "6bd2b7b2-11d0-4b69-92b2-41f30c01a7aa",
+      "uuid": "7dce12c3-6766-4dba-9d57-e3633db28c1e",
       "version": [1, 0, 0]
     },
     {
       "type": "script",
       "language": "javascript",
-      "uuid": "9bca3a4f-2eb4-4d31-9cb5-ef3f5277cfa0",
+      "uuid": "33c1c836-faac-45f6-b0cd-b2bf3f1dacce",
       "version": [1, 0, 0],
       "entry": "scripts/main.js"
     }
@@ -25,7 +24,11 @@
   "dependencies": [
     {
       "module_name": "@minecraft/server",
-      "version": "2.0.0"
+      "version": "1.14.0"
+    },
+    {
+      "uuid": "f294578d-ec41-411f-9df7-319372c2fed0",
+      "version": [1, 0, 0]
     }
   ]
 }
