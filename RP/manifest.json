@@ -1,17 +1,22 @@
-
 {
   "format_version": 2,
   "header": {
-    "name": "ReyCode Energy Sniper RP",
-    "description": "Textures for ReyCode Energy Sniper",
-    "uuid": "2bda9305-3f6b-40c0-8a51-3d2fef915c4c",
+    "name": "Custom Weapons RP",
+    "description": "Texture untuk USP, Desert Eagle, AWP",
+    "uuid": "f294578d-ec41-411f-9df7-319372c2fed0",
     "version": [1, 0, 0],
     "min_engine_version": [1, 21, 0]
   },
   "modules": [
     {
       "type": "resources",
-      "uuid": "4b92cc8a-14ab-4c37-bd11-54b1f4d96c09",
+      "uuid": "326dc513-4352-4827-9075-88e2ece184b1",
+      "version": [1, 0, 0]
+    }
+  ],
+  "dependencies": [
+    {
+      "uuid": "a47dda24-868e-464a-9ab5-4bde6587538a",
       "version": [1, 0, 0]
     }
   ]
