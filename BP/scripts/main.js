@@ -1,54 +1,63 @@
-
 import { world, system } from "@minecraft/server";
 
-const ITEM_ID = "reycode:energy_sniper";
-const COOLDOWN_TICKS = 20;
-const MAX_DISTANCE = 48;
-
-const cooldowns = new Map();
+const WEAPONS = {
+  "customweapons:usp": { damage: 5, speed: 2.6, sound: "random.bow" },
+  "customweapons:desert_eagle": { damage: 8, speed: 3.0, sound: "random.bow" },
+  "customweapons:awp": { damage: 20, speed: 4.5, sound: "random.bow" },
+};
 
 world.afterEvents.itemUse.subscribe((event) => {
-  const player = event.source;
-  const item = event.itemStack;
+  const { source: player, itemStack } = event;
+  const data = WEAPONS[itemStack.typeId];
+  if (!data) return;
 
-  if (!player || player.typeId !== "minecraft:player") return;
-  if (item.typeId !== ITEM_ID) return;
+  const dimension = player.dimension;
+  const head = player.getHeadLocation();
+  const view = player.getViewDirection();
 
-  const now = system.currentTick;
-  const lastUse = cooldowns.get(player.id) ?? -Infinity;
+  const spawnPoint = {
+    x: head.x + view.x * 0.5,
+    y: head.y + view.y * 0.5,
+    z: head.z + view.z * 0.5,
+  };
 
-  if (now - lastUse < COOLDOWN_TICKS) return;
-  cooldowns.set(player.id, now);
+  dimension.spawnParticle("minecraft:basic_flame_particle", spawnPoint);
+  dimension.spawnParticle("minecraft:critical_hit_emitter", spawnPoint);
+  dimension.playSound(data.sound, player.location, { pitch: 1.4, volume: 0.8 });
 
-  const direction = player.getViewDirection();
-  const start = player.getHeadLocation();
-
-  // Visualisasi garis energi fiksi.
-  // Tidak memberikan damage pada versi prototipe ini.
-  for (let distance = 1; distance <= MAX_DISTANCE; distance += 2) {
-    const position = {
-      x: start.x + direction.x * distance,
-      y: start.y + direction.y * distance,
-      z: start.z + direction.z * distance
-    };
-
-    try {
-      player.dimension.spawnParticle(
-        "minecraft:blue_flame_particle",
-        position
-      );
-    } catch (error) {
-      // Partikel dapat berbeda menurut versi game.
-    }
-  }
-
-  try {
-    player.playSound("beacon.activate", {
-      location: start,
-      volume: 0.7,
-      pitch: 1.5
+  system.run(() => {
+    const arrow = dimension.spawnEntity("minecraft:arrow", spawnPoint);
+    arrow.clearVelocity();
+    arrow.applyImpulse({
+      x: view.x * data.speed,
+      y: view.y * data.speed,
+      z: view.z * data.speed,
     });
-  } catch (error) {
-    // Suara opsional.
+    arrow.addTag(`cw_dmg_${data.damage}`);
+
+    let ticks = 0;
+    const trail = system.runInterval(() => {
+      ticks++;
+      if (!arrow.isValid() || ticks > 15) {
+        system.clearRun(trail);
+        return;
+      }
+      dimension.spawnParticle("minecraft:basic_smoke_particle", arrow.location);
+    }, 1);
+  });
+});
+
+world.afterEvents.projectileHitEntity.subscribe((event) => {
+  const projectile = event.projectile;
+  if (!projectile || projectile.typeId !== "minecraft:arrow") return;
+
+  const tag = projectile.getTags().find((t) => t.startsWith("cw_dmg_"));
+  if (!tag) return;
+
+  const extraDamage = Number(tag.replace("cw_dmg_", "")) - 2;
+  const hit = event.getEntityHit && event.getEntityHit();
+  const target = hit ? hit.entity : undefined;
+  if (target && extraDamage > 0) {
+    system.run(() => target.applyDamage(extraDamage));
   }
 });
