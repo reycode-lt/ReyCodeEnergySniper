@@ -1,0 +1,9 @@
+{
+  "resource_pack_name": "customweapons",
+  "texture_name": "atlas.items",
+  "texture_data": {
+    "usp": { "textures": "textures/items/usp" },
+    "desert_eagle": { "textures": "textures/items/desert_eagle" },
+    "awp": { "textures": "textures/items/awp" }
+  }
+}
