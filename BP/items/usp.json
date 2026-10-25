@@ -1,0 +1,17 @@
+{
+  "format_version": "1.21.0",
+  "minecraft:item": {
+    "description": {
+      "identifier": "customweapons:usp",
+      "category": "equipment"
+    },
+    "components": {
+      "minecraft:max_stack_size": 1,
+      "minecraft:icon": { "texture": "usp" },
+      "minecraft:hand_equipped": true,
+      "minecraft:display_name": { "value": "item.customweapons.usp" },
+      "minecraft:durability": { "max_durability": 300 },
+      "minecraft:cooldown": { "category": "usp", "duration": 0.3 }
+    }
+  }
+}
